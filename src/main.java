@@ -4,41 +4,36 @@ public class main {
 
 	public static void main(String[] args){
 			
-		World myWorld = new World(5, 5);
+		World myWorld = new World(5, 15);
 		
-		WorldObject[][] myWorldArray = myWorld.getWorld();
 		int[] worldSize = myWorld.getWorldSize();
-				
-		int numAdditions = 0;
 		
-		Autonomous Ariane = new Autonomous("Ariane", '/');
-		Immovable Building = new Immovable("Building", '+');
-		Immovable Road = new Immovable("Road", '=');
-		Moveable Chair = new Moveable("Chair", '1');
-		Moveable Table = new Moveable("Ariane", '(');
-		Autonomous Lindsey = new Autonomous("Caitrin", ')');
-		
-		
-		
-		myWorld.add(Ariane, 0, 0);
-		//myWorld.add(Building, 2, 0);
-		myWorld.add(Chair, 1, 0);
-		myWorld.add(Table, 1, 1);
-		myWorld.display();
-		
-		System.out.println("before ariane");
-		System.out.println(Ariane.position[0]);
-		System.out.println(Ariane.position[1]);
-
-		Ariane.step();
-		
-		System.out.println("after ariane");
-		System.out.println(Ariane.position[0]);
-		System.out.println(Ariane.position[1]);
-		
-		System.out.println("after chair");
-		System.out.println(Chair.position[0]);
-		System.out.println(Chair.position[1]);
+		 Random randomGenerator = new Random();
+		 
+		 for (int i = 0; i < worldSize[0]; i++)
+		 {
+			 for (int j = 0; j < worldSize[1]; j++)
+			 {
+				 int objType = randomGenerator.nextInt(5);
+				 WorldObject newObj;
+				 if (objType == 0) newObj = new Autonomous("", 'a');//(char) (randomGenerator.nextInt(89)+33));
+				 else if (objType == 1) newObj = new Moveable("", 'm');// (char) (randomGenerator.nextInt(89)+33));
+				 else if (objType == 2) newObj = new Immoveable("", 'x');// (char) (randomGenerator.nextInt(89)+33));
+				 else continue;
+				 myWorld.add(newObj, i, j);
+			 }
+		 }
+		 
+		 int i = 0;
+		 int max = 50;
+		 
+		 while (i < max)
+		 {
+			 myWorld.display();
+			 myWorld.step();
+			 System.out.println(" ");
+			 i++;
+		 }
 
 		
 				

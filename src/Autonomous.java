@@ -5,11 +5,10 @@ public class Autonomous extends Moveable {
 		super(assignedName, assignedToken);
 	}
 	
-	public void step(){
+	public void step()
+	{
 		Direction[] directionValues = Direction.values();
-		Direction randomDirection = directionValues[(int)(Math.random() * directionValues.length)];
-		System.out.println(randomDirection);
-		
-		this.bump(randomDirection);
+		Direction randomDirection = directionValues[(int)(Math.random() * directionValues.length)];		
+		myWorld.step(this, randomDirection);
 	}
 }

@@ -1,15 +1,14 @@
 import java.util.Iterator;
 
 abstract class WorldObject {
-	
 	//public or private?
 	private String name;
 	private char token;
-	protected int[] position;
-	protected World thisWorld;
-	
-	
+	protected int xPosition;
+	protected int yPosition;
+	protected World myWorld;
 
+	
 	public WorldObject(String assignedName, char assignedToken){
 		this.name = assignedName;
 		this.token = assignedToken;
@@ -17,15 +16,14 @@ abstract class WorldObject {
 
 	protected void setPosition(int xPos, int yPos)
 	{
-		int [] positions = new int[2];
-		positions [0] = xPos;
-		positions [1] = yPos;
-		this.position = positions;
+		this.xPosition = xPos;
+		this.yPosition = yPos;
 	}
 	
 	protected void setWorld(World world){
-		thisWorld = world;
+		myWorld = world;
 	}
+
 	
 	public char getToken()
 	{
