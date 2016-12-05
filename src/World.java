@@ -1,4 +1,3 @@
-import java.lang.reflect.Method;
 import java.util.*;
 
 
@@ -8,7 +7,6 @@ public class World
 	private final WorldObject[][] worldObjs;
 	public WorldIter iter;
 	
-
 	public World(int latitude, int longitude){
 		worldObjs = new WorldObject[latitude][longitude];
 		this.iter = new WorldIter();
@@ -20,14 +18,17 @@ public class World
 		{
 			System.err.println("This World contains no autonomous objects");
 		}
-		int x = (int)(Math.random() * (worldObjs.length));
-		int y = (int)(Math.random() * (worldObjs[0].length));
 		
-		if (worldObjs[x][y] instanceof Autonomous)
+		for (WorldObject[] w : worldObjs)
 		{
-			((Autonomous)(worldObjs[x][y])).step();
+			for (WorldObject o : w)
+			{
+				if (o instanceof Autonomous)
+				{
+					((Autonomous)(o)).step();
+				}
+			}
 		}
-		else step();
 	}
 	
 	public synchronized void step(Autonomous a, Direction d)
@@ -82,33 +83,28 @@ public class World
 		private Direction dir;
 		private WorldObject currentObj;
 		
-		private void shift(Autonomous m, Direction dir)
+		private void shift(Moveable m, Direction dir)
 		{
 			this.dir = dir;
 			this.currentObj = m;
 
-			while (this.hasNext())
+			if (this.hasNext())
 			{
-				if ((this.next()) instanceof Moveable)
+				if (this.next() instanceof Moveable)
 				{
-					this.currentObj = this.next();
+					shift((Moveable)this.next(), dir);
 				}
-				else break;
+				else return;
 			}
-			
-			if (this.next() instanceof Immoveable) return;
-			
 			else
 			{
 				int[] nextIndices = nextIndices();
 				if (nextIndices[0] >= 0 && nextIndices[1] >= 0 && (worldObjs[nextIndices[0]][nextIndices[1]] == null))
-				{
-//					while  (!this.prev().equals(m))
-//					{
+				{					
 						this.shift(nextIndices[0], nextIndices[1]);
-					//}
 				}
-			}
+			}	
+			
 		}
 		
 		private void shift(int i, int j)
@@ -122,7 +118,6 @@ public class World
 			currentObj.yPosition = j;
 			if (prevObject != null && (prevObject instanceof Moveable))
 			{
-				System.out.println(i + " " + j);
 				this.currentObj = prevObject;
 				shift(xX, xY);
 			}
@@ -133,26 +128,34 @@ public class World
 		{
 			switch(dir)
 			{
-				case down:
-					if (currentObj.yPosition > 0 && worldObjs[currentObj.xPosition][currentObj.yPosition - 1] != null) 
-					{
-						return true;
-					}
 				case up:
-					if (currentObj.yPosition < worldObjs[0].length - 1 && worldObjs[currentObj.xPosition][currentObj.yPosition + 1] != null)
+					if ((currentObj.yPosition > 0)
+							&& (worldObjs[currentObj.xPosition][currentObj.yPosition - 1] != null))
 					{
 						return true;
 					}
+					else return false;
+				case down:
+					if ((currentObj.yPosition < worldObjs[0].length - 1)
+							&& (worldObjs[currentObj.xPosition][currentObj.yPosition + 1] != null))
+					{
+						return true;
+					}
+					else return false;
 				case left:
-					if (currentObj.xPosition > 0 && worldObjs[currentObj.xPosition - 1][currentObj.yPosition] != null)
+					if ((currentObj.xPosition > 0) 
+							&& (worldObjs[currentObj.xPosition - 1][currentObj.yPosition] != null))
 					{
 						return true;
 					}
+					else return false;
 				case right:
-					if (currentObj.xPosition < worldObjs.length - 1 && worldObjs[currentObj.xPosition + 1][currentObj.yPosition]!= null)
+					if ((currentObj.xPosition < worldObjs.length - 1)
+							&& (worldObjs[currentObj.xPosition + 1][currentObj.yPosition]!= null))
 					{
 						return true;
 					}
+					else return false;
 			}
 			return false;
 		}
@@ -163,11 +166,11 @@ public class World
 		{
 			switch(dir)
 			{
-				case down:
+				case up:
 					if (currentObj.yPosition > 0){
 					return worldObjs[currentObj.xPosition][currentObj.yPosition - 1];
 					}
-				case up:
+				case down:
 					if (currentObj.yPosition < worldObjs[0].length - 1){
 						return worldObjs[currentObj.xPosition][currentObj.yPosition + 1];
 					}
@@ -187,11 +190,11 @@ public class World
 		{
 			switch(dir)
 			{
-				case up:
+				case down:
 					if (currentObj.yPosition > 0){
 					return worldObjs[currentObj.xPosition][currentObj.yPosition - 1];
 					}
-				case down:
+				case up:
 					if (currentObj.yPosition < worldObjs[0].length - 1){
 						return worldObjs[currentObj.xPosition][currentObj.yPosition + 1];
 					}
@@ -212,13 +215,13 @@ public class World
 			int[] nextIndices = {-1,-1};
 			switch(dir)
 			{
-				case down:
+				case up:
 					if (currentObj.yPosition > 0)
 					{
 						nextIndices[0] = currentObj.xPosition;
 						nextIndices[1] = currentObj.yPosition - 1;
 					}
-				case up:
+				case down:
 					if (currentObj.yPosition < worldObjs[0].length - 1){
 						nextIndices[0] = currentObj.xPosition;
 						nextIndices[1] = currentObj.yPosition + 1;

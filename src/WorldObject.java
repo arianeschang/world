@@ -1,7 +1,6 @@
 import java.util.Iterator;
 
 abstract class WorldObject {
-	//public or private?
 	private String name;
 	private char token;
 	protected int xPosition;

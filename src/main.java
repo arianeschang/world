@@ -4,7 +4,7 @@ public class main {
 
 	public static void main(String[] args){
 			
-		World myWorld = new World(5, 15);
+		World myWorld = new World(1, 15);
 		
 		int[] worldSize = myWorld.getWorldSize();
 		
@@ -16,16 +16,16 @@ public class main {
 			 {
 				 int objType = randomGenerator.nextInt(5);
 				 WorldObject newObj;
-				 if (objType == 0) newObj = new Autonomous("", 'a');//(char) (randomGenerator.nextInt(89)+33));
-				 else if (objType == 1) newObj = new Moveable("", 'm');// (char) (randomGenerator.nextInt(89)+33));
-				 else if (objType == 2) newObj = new Immoveable("", 'x');// (char) (randomGenerator.nextInt(89)+33));
+				 if (objType == 0) newObj = new Autonomous("", 'a');
+				 else if (objType == 1) newObj = new Moveable("", 'm');
+				 else if (objType == 2) newObj = new Immoveable("", 'x');
 				 else continue;
 				 myWorld.add(newObj, i, j);
 			 }
 		 }
 		 
 		 int i = 0;
-		 int max = 50;
+		 int max = 100;
 		 
 		 while (i < max)
 		 {
